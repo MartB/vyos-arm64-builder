@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-export DEBEMAIL="test@example.com"
+export DEBEMAIL="contact@martb.dev"
 BASEDIR=$(dirname $(readlink -f "$0"))
 PATCHES_DIR=$(readlink -f "${BASEDIR}/patches")
 
@@ -58,7 +58,6 @@ for i in $REPOS; do
 	dpkg-buildpackage -b -us -uc -tc
 	cd "${BASEDIR}"
 done
-
 # Use our copy of live-build to do image building
 dpkg -i build/live-build*.deb
 cp build/*.deb vyos-build/packages/
