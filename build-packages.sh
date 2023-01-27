@@ -19,6 +19,18 @@ fi
 PACKAGES_DIR=$(readlink -f "vyos-build/packages")
 cd "${PACKAGES_DIR}"
 
+# Rebuild single package
+#echo "building dropbear"
+#d="dropbear"
+#echo "BUILDING PACKAGE ${d}"
+#cd "${d}"
+#lua ../../../runjenkins.lua || :
+#find -name \*.deb -exec cp {} "${PACKAGES_DIR}" \;
+#cd "${BASEDIR}"
+#dpkg -i build/live-build*.deb
+#cp build/*.deb vyos-build/packages/
+#exit
+
 for d in $(find -name Jenkinsfile -exec dirname {} \;); do
 	echo "BUILDING PACKAGE ${d}"
 	cd "${d}"
@@ -28,7 +40,7 @@ for d in $(find -name Jenkinsfile -exec dirname {} \;); do
 done
 
 # Workaround for XDP compilation (done by gcc-multilib on other platforms)
-ln -s /usr/include/aarch64-linux-gnu/asm /usr/include/asm
+[ ! -d "/usr/include/asm" ] && ln -s /usr/include/aarch64-linux-gnu/asm /usr/include/asm
 
 cd "${BASEDIR}"
 REPOS=$(cat repos.txt)
