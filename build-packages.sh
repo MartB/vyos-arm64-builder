@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 export DEBEMAIL="contact@martb.dev"
 BASEDIR=$(dirname $(readlink -f "$0"))
@@ -49,7 +49,7 @@ eval $(opam env --root=/opt/opam --set-root)
 for i in $REPOS; do
 	PACKAGENAME=$(echo "${i}" | awk -F ';' '{print $1}')
 	PACKAGECOMMIT=$(echo "${i}" | awk -F ';' '{print $2}')
-	if [[ "${PACKAGENAME}" = https://* ]]; then
+	if [[ "${PACKAGENAME}" =~ ^https://.* ]]; then
 		PACKAGE_FOLDER_NAME=$(echo "${PACKAGENAME}" | awk -F '/' '{print $NF}' | sed "s/\.git//g")
 		git clone "${PACKAGENAME}" "build/${PACKAGE_FOLDER_NAME}"
 		PACKAGENAME="${PACKAGE_FOLDER_NAME}"
@@ -62,8 +62,6 @@ for i in $REPOS; do
 	fi
 	if [ "${PACKAGENAME}" = "ipaddrcheck" ]; then
 		rm src/*.o
-	elif [ "${PACKAGENAME}" = "python-inotify" ]; then
-		patch -p1 -i "${PATCHES_DIR}/python-inotify-disable-test_renames.patch"
 	elif [ "${PACKAGENAME}" = "vyos-live-build" ]; then
 		patch -p1 -i "${PATCHES_DIR}/vyos-live-build-traverse-only-disable-iso-secure-boot.patch"
 	fi
